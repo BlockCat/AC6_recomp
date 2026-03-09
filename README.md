@@ -1,7 +1,7 @@
 # AC6Recomp
 
 > [!CAUTION]
-> This project is a work in progress, so a stable experience isn't guaranteed yet. It progresses in-game, but more testing and modifications are needed.
+> This project is a work in progress, so a stable experience isn't guaranteed yet. It progresses in-game, but with likely bugs and crashes and more testing is needed.
 
 Recompiled using the [ReXGlue SDK](https://github.com/rexglue/rexglue-sdk).
 
