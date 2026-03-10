@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rex/cvar.h>
+#include <rex/graphics/flags.h>
 #include <rex/rex_app.h>
 #include <rex/ui/overlay/debug_overlay.h>
 
@@ -21,6 +22,8 @@ class Ac6recompApp : public rex::ReXApp {
  protected:
   void OnPreSetup(rex::RuntimeConfig& config) override {
     REXCVAR_SET(vfetch_index_rounding_bias, true);
+    REXCVAR_SET(ac6_unlock_fps, true);
+    REXCVAR_SET(vsync, false);
   }
 
   void OnCreateDialogs(rex::ui::ImGuiDrawer* drawer) override {
