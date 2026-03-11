@@ -10557,6 +10557,7 @@ memmove_s = 0x823809F0
 0x82272c98 = {}
 0x82322300 = {}
 0x82272cc8 = {}
+0x82272918 = {}
 
 # ---------------------------------------------------------------------------
 # Midasm hooks — 60fps unlock 
@@ -10591,6 +10592,7 @@ registers = ["r29"]
 [[midasm_hook]]
 address = 0x821F05F8
 name = "ac6PresentTimingHook"
+registers = ["r31"]
 
 # Force D3DPRESENT_INTERVAL to ONE (60fps) when the unlock CVar is on.
 #

@@ -40,7 +40,7 @@ void ac6DeltaDivisorHook(PPCRegister& r29) {
 }
 
 // Hooked before the device[21516] branch so it fires every frame, not just VdSwap frames.
-void ac6PresentTimingHook() {
+void ac6PresentTimingHook(PPCRegister& /*r31*/) {
     ac6::d3d::OnFrameBoundary();
 
     auto now = Clock::now();
