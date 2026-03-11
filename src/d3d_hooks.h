@@ -18,6 +18,4 @@ const DrawStatsSnapshot& GetDrawStats();
 
 const ShadowState& GetShadowState();
 
-const FrameDrawLog& GetFrameDrawLog();
-
 }  // namespace ac6::d3d
