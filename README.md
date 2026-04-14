@@ -22,7 +22,7 @@ Users must supply their own legally obtained game files locally. This repository
 - [CMake](https://cmake.org/) 3.25+
 - [Ninja](https://ninja-build.org/)
 - [Clang](https://releases.llvm.org/) (LLVM/Clang toolchain)
-- You need the game's original Xbox 360 disc image (ISO). Tools to extract it can be found here.
+- You need the game's original Xbox 360 disc image (ISO). Tools to extract it can be found [here](https://consolemods.org/wiki/Xbox:ISO_Extraction_%26_Repacking).
 
 After extraction, drop both the game assets and default.xex into the assets/ directory.
 
