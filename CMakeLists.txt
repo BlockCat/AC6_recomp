@@ -26,8 +26,6 @@ set(AC6RECOMP_SOURCES
     src/ac6_native_renderer/native_renderer.cpp
     src/ac6_native_renderer/render_device.cpp
     src/ac6_native_renderer/render_graph.cpp
-    src/render_hooks.cpp
-    src/d3d_hooks.cpp
 )
 
 if(WIN32)
@@ -37,4 +35,3 @@ else()
 endif()
 
 rexglue_setup_target(ac6recomp)
-
