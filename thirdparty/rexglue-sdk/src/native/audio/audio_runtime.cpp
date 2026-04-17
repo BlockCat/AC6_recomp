@@ -12,14 +12,23 @@
 
 #include <native/audio/audio_runtime.h>
 
+#if defined(_WIN32)
 #include <native/audio/wasapi/wasapi_audio_driver.h>
+#else
+#include <native/audio/sdl/sdl_audio_driver.h>
+#endif
 #include <rex/cvar.h>
 #include <rex/memory.h>
 #include <rex/ppc/exceptions.h>
 #include <native/stream.h>
 
+#if defined(_WIN32)
 REXCVAR_DEFINE_STRING(audio_backend, "wasapi", "Audio", "Audio backend: wasapi")
-    .allowed({"wasapi"})
+    .allowed({"wasapi", "sdl"})
+#else
+REXCVAR_DEFINE_STRING(audio_backend, "sdl", "Audio", "Audio backend: sdl")
+    .allowed({"sdl"})
+#endif
     .lifecycle(rex::cvar::Lifecycle::kRequiresRestart);
 REXCVAR_DEFINE_INT32(audio_max_queue_depth, 8, "Audio",
                      "Maximum queued render-driver frames per client");
@@ -41,7 +50,14 @@ namespace {
 
 std::unique_ptr<AudioDriver> CreateConfiguredDriver(memory::Memory* memory, AudioRuntime* runtime,
                                                     const size_t client_index) {
+#if defined(_WIN32)
+  if (REXCVAR_GET(audio_backend) == "sdl") {
+    return std::make_unique<sdl::SdlAudioDriver>(memory, runtime, client_index);
+  }
   return std::make_unique<wasapi::WasapiAudioDriver>(memory, runtime, client_index);
+#else
+  return std::make_unique<sdl::SdlAudioDriver>(memory, runtime, client_index);
+#endif
 }
 
 uint32_t QueueDepthLimit() {
