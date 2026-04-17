@@ -439,6 +439,8 @@ void DxbcShaderTranslator::StartVertexOrDomainShader() {
       GetDxbcShaderModification().vertex.host_vertex_shader_type;
   switch (host_vertex_shader_type) {
     case Shader::HostVertexShaderType::kVertex:
+    case Shader::HostVertexShaderType::kPointListAsTriangleStrip:
+    case Shader::HostVertexShaderType::kRectangleListAsTriangleStrip:
       StartVertexShader_LoadVertexIndex();
       break;
 
