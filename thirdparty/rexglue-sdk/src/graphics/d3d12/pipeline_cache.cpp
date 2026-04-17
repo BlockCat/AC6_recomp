@@ -1087,10 +1087,21 @@ bool PipelineCache::TranslateAnalyzedShader(DxbcShaderTranslator& translator,
       case Shader::HostVertexShaderType::kQuadDomainPatchIndexed:
         host_shader_type = "patch-indexed quad domain";
         break;
-      default:
-        assert(modification.vertex.host_vertex_shader_type ==
-               Shader::HostVertexShaderType::kVertex);
+      case Shader::HostVertexShaderType::kPointListAsTriangleStrip:
+        host_shader_type = "point-list-as-triangle-strip vertex";
+        break;
+      case Shader::HostVertexShaderType::kRectangleListAsTriangleStrip:
+        host_shader_type = "rectangle-list-as-triangle-strip vertex";
+        break;
+      case Shader::HostVertexShaderType::kMemExportCompute:
+        host_shader_type = "memexport compute";
+        break;
+      case Shader::HostVertexShaderType::kVertex:
         host_shader_type = "vertex";
+        break;
+      default:
+        assert_always();
+        host_shader_type = "unknown";
     }
   } else {
     host_shader_type = "pixel";
@@ -2797,8 +2808,12 @@ ID3D12PipelineState* PipelineCache::CreateD3D12Pipeline(
     state_desc.DS.pShaderBytecode = runtime_description.vertex_shader->translated_binary().data();
     state_desc.DS.BytecodeLength = runtime_description.vertex_shader->translated_binary().size();
   } else {
-    assert_true(host_vertex_shader_type == Shader::HostVertexShaderType::kVertex);
-    if (host_vertex_shader_type != Shader::HostVertexShaderType::kVertex) {
+    assert_true(host_vertex_shader_type == Shader::HostVertexShaderType::kVertex ||
+                host_vertex_shader_type == Shader::HostVertexShaderType::kPointListAsTriangleStrip ||
+                host_vertex_shader_type == Shader::HostVertexShaderType::kRectangleListAsTriangleStrip);
+    if (host_vertex_shader_type != Shader::HostVertexShaderType::kVertex &&
+        host_vertex_shader_type != Shader::HostVertexShaderType::kPointListAsTriangleStrip &&
+        host_vertex_shader_type != Shader::HostVertexShaderType::kRectangleListAsTriangleStrip) {
       // Fallback vertex shaders are not needed on Direct3D 12.
       return nullptr;
     }

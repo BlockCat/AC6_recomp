@@ -17,6 +17,8 @@ REXCVAR_DEFINE_BOOL(audio_trace_telemetry, false, "Audio",
                     "Trace audio runtime telemetry");
 REXCVAR_DEFINE_BOOL(audio_trace_render_driver_verbose, false, "Audio",
                     "Trace render-driver activity");
+REXCVAR_DEFINE_BOOL(audio_deep_trace, false, "Audio",
+                    "Enable verbose runtime audio tracing");
 
 namespace rex::audio {
 

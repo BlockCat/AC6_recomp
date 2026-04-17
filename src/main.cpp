@@ -10,7 +10,4 @@
 
 #include "ac6recomp_app.h"
 
-REXCVAR_DEFINE_BOOL(audio_deep_trace, false, "Audio",
-                    "Enable verbose runtime audio tracing");
-
 REX_DEFINE_APP(ac6recomp, Ac6recompApp::Create)
