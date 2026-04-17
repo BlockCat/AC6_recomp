@@ -145,15 +145,28 @@ void gapFillCodeRegions(CodegenContext& ctx) {
       while (currentStart < segment.end) {
         // Skip past the portion of this segment that is inside another function
         if (auto* containingFunc = graph.getFunctionContaining(currentStart)) {
-          uint32_t funcEnd = containingFunc->base() + containingFunc->size();
+          uint32_t funcEnd = currentStart + 4;
+          
+          if (containingFunc->blocks().empty()) {
+            funcEnd = containingFunc->base() + containingFunc->size();
+          } else {
+            for (const auto& block : containingFunc->blocks()) {
+              if (block.contains(currentStart)) {
+                funcEnd = block.end();
+                break;
+              }
+            }
+          }
+          
           currentStart = std::max(currentStart + 4, funcEnd);
           currentStart = (currentStart + 3) & ~3;
           continue;
         }
 
-        // Skip if this looks like exception handler data (handler ptr + rdata ptr)
+        // Skip past exception handler data by advancing 4 bytes and continuing
         if (looksLikeExceptionData(binary, graph, currentStart)) {
-          break;
+          currentStart += 4;
+          continue;
         }
 
         uint32_t segmentSize = segment.end - currentStart;
@@ -237,12 +250,24 @@ void cleanupAbsorbedGapFills(CodegenContext& ctx) {
 namespace phases {
 
 VoidResult GapFill(CodegenContext& ctx) {
-  gapFillCodeRegions(ctx);
+  size_t lastCount = 0;
+  size_t iteration = 0;
+  
+  while (true) {
+    size_t startCount = ctx.graph.functionCount();
+    
+    gapFillCodeRegions(ctx);
 
-  // Discover blocks for gap-filled functions
-  auto known = buildKnownFunctions(ctx.graph, /*excludeGapFill=*/true);
-  size_t discovered = discoverPendingFunctions(ctx, known);
-  REXCODEGEN_INFO("Analyze: discovered blocks for {} gap-filled functions", discovered);
+    // Discover blocks for gap-filled functions
+    auto known = buildKnownFunctions(ctx.graph, /*excludeGapFill=*/true);
+    size_t discovered = discoverPendingFunctions(ctx, known);
+    REXCODEGEN_INFO("Analyze: GapFill iteration {} discovered blocks for {} gap-filled functions", iteration, discovered);
+
+    if (ctx.graph.functionCount() == startCount || iteration > 10) {
+      break;
+    }
+    iteration++;
+  }
 
   cleanupAbsorbedGapFills(ctx);
 
