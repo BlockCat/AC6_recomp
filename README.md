@@ -64,16 +64,29 @@ cd AC6_recomp
 
 ## Build
 
-### 1 — Generate the recompiled code (first time, and after updating `default.xex`)
+### 1 — Configure
 
 ```bash
 cmake --preset win-amd64-relwithdebinfo
+```
+
+### 2 — Generate the recompiled code (first time, and after updating `default.xex`)
+
+```bash
 cmake --build --preset win-amd64-relwithdebinfo --target ac6recomp_codegen
 ```
 
 This step reads `assets/default.xex`, lifts all PowerPC instructions to C++, and writes the output to `generated/`. It can take a few minutes.
 
-### 2 — Build the runtime
+### 3 — Re-run CMake configure
+
+```bash
+cmake --preset win-amd64-relwithdebinfo
+```
+
+Re-run configure after codegen so CMake picks up the generated `generated/sources.cmake` file and adds the generated `.cpp` sources to the target.
+
+### 4 — Build the runtime
 
 ```bash
 cmake --build --preset win-amd64-relwithdebinfo
@@ -118,6 +131,7 @@ Substitute `win-amd64-relwithdebinfo` with `linux-amd64-relwithdebinfo` in every
 ```bash
 cmake --preset linux-amd64-relwithdebinfo
 cmake --build --preset linux-amd64-relwithdebinfo --target ac6recomp_codegen
+cmake --preset linux-amd64-relwithdebinfo
 cmake --build --preset linux-amd64-relwithdebinfo
 ./out/build/linux-amd64-relwithdebinfo/ac6recomp assets
 ```
